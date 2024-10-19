@@ -1,4 +1,4 @@
-package com.example.hellojavafx.models;
+﻿package com.example.hellojavafx.models;
 
 import java.util.Random;
 
@@ -6,10 +6,12 @@ public class Sudoku {
 
     private int[][] sudoku; // El tablero completo generado
     private int[][] visibleSudoku; // Tablero que el usuario verá (oculto inicialmente)
+    private Random random; // Objeto Random para generar números aleatorios
 
     public Sudoku() {
         sudoku = new int[6][6]; // Tablero de 6x6
         visibleSudoku = new int[6][6]; // El tablero que se muestra al usuario
+        random = new Random(); // Inicializar Random
         limpiarSudoku();
     }
 
@@ -38,11 +40,15 @@ public class Sudoku {
             return resolverSudoku(fila + 1, 0); // Pasar a la siguiente fila
         }
 
-        Random random = new Random();
+        if (sudoku[fila][columna] != 0) {
+            return resolverSudoku(fila, columna + 1); // Avanzar si la celda ya está llena
+        }
+
         int[] numeros = {1, 2, 3, 4, 5, 6}; // Posibles números
+
+        // Mezclar los números para elegir aleatoriamente
         for (int i = numeros.length - 1; i > 0; i--) {
             int j = random.nextInt(i + 1);
-            // Mezclamos los números para elegir aleatoriamente
             int temp = numeros[i];
             numeros[i] = numeros[j];
             numeros[j] = temp;
@@ -60,7 +66,7 @@ public class Sudoku {
         return false; // No es posible resolver
     }
 
-    // Nuevo método para validar si un número es válido en la posición dada
+    // Método para validar si un número es válido en la posición dada
     public boolean esNumeroValido(int fila, int columna, int valor) {
         return validarFila(fila, valor) && validarColumna(columna, valor) && validarCuadrante(fila, columna, valor);
     }
@@ -119,7 +125,12 @@ public class Sudoku {
 
     // Método para revelar dos valores en cada bloque de 2x3
     public void revelarDosValoresEnCadaBloque() {
-        Random random = new Random();
+        // Limpiar el tablero visible antes de revelar nuevos valores
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                visibleSudoku[i][j] = 0;
+            }
+        }
         // Recorremos cada bloque de 2x3
         for (int bloqueFila = 0; bloqueFila < 6; bloqueFila += 2) {
             for (int bloqueColumna = 0; bloqueColumna < 6; bloqueColumna += 3) {
@@ -139,13 +150,21 @@ public class Sudoku {
         }
     }
 
-    // Método para sugerir un número válido para una celda vacía
-    public int sugerirNumero(int fila, int columna) {
-        for (int num = 1; num <= 6; num++) {
-            if (esNumeroValido(fila, columna, num)) {
-                return num; // Retorna el primer número válido encontrado
+    // Método para generar un nuevo Sudoku y preparar el tablero visible
+    public void generarNuevoSudoku() {
+        limpiarSudoku();
+        generarSudokuCompleto();
+        revelarDosValoresEnCadaBloque();
+    }
+
+    // Método para imprimir el Sudoku (para depuración)
+    public void imprimirSudoku() {
+        System.out.println("Tablero Sudoku:");
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                System.out.print(sudoku[i][j] + " ");
             }
+            System.out.println();
         }
-        return -1; // No hay sugerencias válidas
     }
 }

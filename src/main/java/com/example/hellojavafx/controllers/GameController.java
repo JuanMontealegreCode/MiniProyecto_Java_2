@@ -2,150 +2,211 @@ package com.example.hellojavafx.controllers;
 
 import com.example.hellojavafx.models.Sudoku;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class GameController {
 
-    private Sudoku sudokuModel = new Sudoku();
-    private final ArrayList<ArrayList<TextField>> sudokuGrid = new ArrayList<>();
+    private static final int GRID_SIZE = 6;
 
     @FXML
-    private TextField tf1, tf2, tf3, tf4, tf5, tf6;
+    private TextField tf1;
     @FXML
-    private TextField tf7, tf8, tf9, tf10, tf11, tf12;
+    private TextField tf2;
     @FXML
-    private TextField tf13, tf14, tf15, tf16, tf17, tf18;
+    private TextField tf3;
     @FXML
-    private TextField tf19, tf20, tf21, tf22, tf23, tf24;
+    private TextField tf4;
     @FXML
-    private TextField tf25, tf26, tf27, tf28, tf29, tf30;
+    private TextField tf5;
     @FXML
-    private TextField tf31, tf32, tf33, tf34, tf35, tf36;
+    private TextField tf6;
+    @FXML
+    private TextField tf7;
+    @FXML
+    private TextField tf8;
+    @FXML
+    private TextField tf9;
+    @FXML
+    private TextField tf10;
+    @FXML
+    private TextField tf11;
+    @FXML
+    private TextField tf12;
+    @FXML
+    private TextField tf13;
+    @FXML
+    private TextField tf14;
+    @FXML
+    private TextField tf15;
+    @FXML
+    private TextField tf16;
+    @FXML
+    private TextField tf17;
+    @FXML
+    private TextField tf18;
+    @FXML
+    private TextField tf19;
+    @FXML
+    private TextField tf20;
+    @FXML
+    private TextField tf21;
+    @FXML
+    private TextField tf22;
+    @FXML
+    private TextField tf23;
+    @FXML
+    private TextField tf24;
+    @FXML
+    private TextField tf25;
+    @FXML
+    private TextField tf26;
+    @FXML
+    private TextField tf27;
+    @FXML
+    private TextField tf28;
+    @FXML
+    private TextField tf29;
+    @FXML
+    private TextField tf30;
+    @FXML
+    private TextField tf31;
+    @FXML
+    private TextField tf32;
+    @FXML
+    private TextField tf33;
+    @FXML
+    private TextField tf34;
+    @FXML
+    private TextField tf35;
+    @FXML
+    private TextField tf36;
+
+    private TextField[][] textFields;
+
+    private Sudoku sudoku;
 
     @FXML
     public void initialize() {
-        // Inicialización de las celdas
-        ArrayList<TextField> row1 = new ArrayList<>();
-        row1.add(tf1); row1.add(tf2); row1.add(tf3); row1.add(tf4); row1.add(tf5); row1.add(tf6);
-        sudokuGrid.add(row1);
+        // Inicializar la matriz de TextFields
+        textFields = new TextField[GRID_SIZE][GRID_SIZE];
 
-        ArrayList<TextField> row2 = new ArrayList<>();
-        row2.add(tf7); row2.add(tf8); row2.add(tf9); row2.add(tf10); row2.add(tf11); row2.add(tf12);
-        sudokuGrid.add(row2);
+        // Asignar los TextFields a la matriz
+        textFields[0][0] = tf1;
+        textFields[0][1] = tf2;
+        textFields[0][2] = tf3;
+        textFields[0][3] = tf4;
+        textFields[0][4] = tf5;
+        textFields[0][5] = tf6;
 
-        ArrayList<TextField> row3 = new ArrayList<>();
-        row3.add(tf13); row3.add(tf14); row3.add(tf15); row3.add(tf16); row3.add(tf17); row3.add(tf18);
-        sudokuGrid.add(row3);
+        textFields[1][0] = tf7;
+        textFields[1][1] = tf8;
+        textFields[1][2] = tf9;
+        textFields[1][3] = tf10;
+        textFields[1][4] = tf11;
+        textFields[1][5] = tf12;
 
-        ArrayList<TextField> row4 = new ArrayList<>();
-        row4.add(tf19); row4.add(tf20); row4.add(tf21); row4.add(tf22); row4.add(tf23); row4.add(tf24);
-        sudokuGrid.add(row4);
+        textFields[2][0] = tf13;
+        textFields[2][1] = tf14;
+        textFields[2][2] = tf15;
+        textFields[2][3] = tf16;
+        textFields[2][4] = tf17;
+        textFields[2][5] = tf18;
 
-        ArrayList<TextField> row5 = new ArrayList<>();
-        row5.add(tf25); row5.add(tf26); row5.add(tf27); row5.add(tf28); row5.add(tf29); row5.add(tf30);
-        sudokuGrid.add(row5);
+        textFields[3][0] = tf19;
+        textFields[3][1] = tf20;
+        textFields[3][2] = tf21;
+        textFields[3][3] = tf22;
+        textFields[3][4] = tf23;
+        textFields[3][5] = tf24;
 
-        ArrayList<TextField> row6 = new ArrayList<>();
-        row6.add(tf31); row6.add(tf32); row6.add(tf33); row6.add(tf34); row6.add(tf35); row6.add(tf36);
-        sudokuGrid.add(row6);
+        textFields[4][0] = tf25;
+        textFields[4][1] = tf26;
+        textFields[4][2] = tf27;
+        textFields[4][3] = tf28;
+        textFields[4][4] = tf29;
+        textFields[4][5] = tf30;
 
-        generarNuevoTablero();
+        textFields[5][0] = tf31;
+        textFields[5][1] = tf32;
+        textFields[5][2] = tf33;
+        textFields[5][3] = tf34;
+        textFields[5][4] = tf35;
+        textFields[5][5] = tf36;
+
+        // Inicializar el Sudoku y generar un nuevo juego
+        sudoku = new Sudoku();
+        generarNuevoJuego();
     }
 
-    @FXML
-    public void OnMouseClickedHelpButton(MouseEvent event) {
-        // Funcionalidad del Botón de Ayuda: Sugerir un número válido para una celda vacía
-        for (int fila = 0; fila < sudokuGrid.size(); fila++) {
-            for (int columna = 0; columna < sudokuGrid.get(fila).size(); columna++) {
-                TextField cell = sudokuGrid.get(fila).get(columna);
-                if (cell.getText().isEmpty()) {
-                    int sugerencia = sudokuModel.sugerirNumero(fila, columna);
-                    if (sugerencia != -1) {
-                        cell.setText(String.valueOf(sugerencia));
-                        cell.setStyle("-fx-background-color: yellow;");
-                        return;
+    private void generarNuevoJuego() {
+        // Generar un nuevo Sudoku
+        sudoku.generarNuevoSudoku();
+
+        // Obtener el tablero visible que se mostrará al usuario
+        int[][] grid = sudoku.getVisibleSudoku();
+
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                if (grid[i][j] != 0) {
+                    textFields[i][j].setText(String.valueOf(grid[i][j]));
+                    textFields[i][j].setEditable(false);
+                    textFields[i][j].setStyle("-fx-background-color: lightgray;");
+                } else {
+                    textFields[i][j].setText("");
+                    textFields[i][j].setEditable(true);
+                    textFields[i][j].setStyle("");
+                }
+
+                // Limitar el texto a un carácter y permitir solo números del 1 al 6
+                textFields[i][j].setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
+                    if (change.getControlNewText().matches("[1-6]?")) {
+                        return change;
+                    } else {
+                        return null;
                     }
-                }
+                }));
+
+                // Agregar un listener para validar la entrada
+                int row = i;
+                int col = j;
+                textFields[i][j].textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.isEmpty()) {
+                        int valor = Integer.parseInt(newValue);
+                        validarEntrada(row, col, valor);
+                    } else {
+                        textFields[row][col].setStyle("");
+                    }
+                });
             }
         }
     }
 
-    @FXML
-    void OnKeyTypedInCell(KeyEvent event) {
-        TextField source = (TextField) event.getSource();
-        String input = event.getCharacter();
-
-        // Validar que la entrada esté en el rango permitido (1-6)
-        if (!input.matches("[1-6]")) {
-            event.consume();
-            source.setStyle("-fx-border-color: red;");
+    private void validarEntrada(int row, int col, int valor) {
+        // Verificar si el número ingresado es correcto
+        if (sudoku.verificarNumero(row, col, valor)) {
+            textFields[row][col].setStyle("-fx-text-inner-color: black;");
+            // Puedes agregar lógica adicional para verificar si el Sudoku está completo
         } else {
-            int fila = -1, columna = -1;
-
-            // Busca en qué fila y columna está el TextField
-            for (int i = 0; i < sudokuGrid.size(); i++) {
-                ArrayList<TextField> row = sudokuGrid.get(i);
-                if (row.contains(source)) {
-                    fila = i;
-                    columna = row.indexOf(source);
-                    break;
-                }
-            }
-
-            // Si encontramos la fila y columna
-            if (fila != -1 && columna != -1) {
-                int valor = Integer.parseInt(input);
-
-                // Verificar si el número es correcto
-                if (sudokuModel.verificarNumero(fila, columna, valor)) {
-                    sudokuModel.revelarNumero(fila, columna); // Revelar el número
-                    source.setText(String.valueOf(valor)); // Muestra el número en la celda
-                    source.setStyle("-fx-border-color: green;"); // Resaltar la celda en verde si es correcto
-                } else {
-                    event.consume();
-                    source.setStyle("-fx-border-color: red;"); // Resaltar la celda en rojo si es incorrecto
-                }
-            }
+            textFields[row][col].setStyle("-fx-text-inner-color: red;");
         }
     }
 
     @FXML
-    public void OnMouseClickedRestartNewGame(MouseEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("¿Seguro que quieres empezar un nuevo juego?");
-        alert.setContentText("Esto reiniciará el tablero.");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            generarNuevoTablero();
-        }
+    void OnMouseClickedRestartNewGame(MouseEvent event) {
+        generarNuevoJuego();
     }
 
-    public void generarNuevoTablero() {
-        sudokuModel.generarSudokuCompleto(); // Genera el tablero completo
-        sudokuModel.revelarDosValoresEnCadaBloque(); // Revela dos valores en cada bloque de 2x3
-
-        int[][] visibleTablero = sudokuModel.getVisibleSudoku(); // Obtén el tablero visible
-
-        for (int fila = 0; fila < sudokuGrid.size(); fila++) {
-            for (int columna = 0; columna < sudokuGrid.get(fila).size(); columna++) {
-                TextField cell = sudokuGrid.get(fila).get(columna);
-                int valor = visibleTablero[fila][columna];
-                if (valor != 0) {
-                    cell.setText(String.valueOf(valor));
-                    cell.setStyle("");
-                } else {
-                    cell.clear(); // Limpia las celdas vacías
-                    cell.setStyle("");
-                }
+    @FXML
+    void OnMouseClickedHelpButton(MouseEvent event) {
+        // Mostrar la solución completa
+        int[][] grid = sudoku.getSudoku();
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                textFields[i][j].setText(String.valueOf(grid[i][j]));
+                textFields[i][j].setEditable(false);
+                textFields[i][j].setStyle("-fx-background-color: lightgray;");
             }
         }
     }
